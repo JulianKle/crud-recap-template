@@ -1,16 +1,11 @@
 import Form from "@/components/Layout/Form";
 import ActionButton from "@/components/Layout/ActionButton";
 
-export default function ServiceForm({ service = {}, onSubmit }) {
+export default function ServiceForm({ player = {}, onSubmit }) {
   function _onSubmit(event) {
     event.preventDefault();
     const data = Object.fromEntries(new FormData(event.target));
-    onSubmit({
-      ...data,
-      offerer: {
-        name: data.offerer,
-      },
-    });
+    onSubmit(data);
   }
   return (
     <Form as="form" direction="column" onSubmit={_onSubmit}>
@@ -18,51 +13,54 @@ export default function ServiceForm({ service = {}, onSubmit }) {
         Name
         <input
           name="name"
-          defaultValue={service.name}
-          placeholder="Enter the service name"
+          defaultValue={player.name}
+          placeholder="Enter the player name"
           required
           autoFocus
         />
       </label>
       <label>
-        Offerer
+        Club
         <input
-          name="offerer"
-          defaultValue={service.offerer?.name}
-          placeholder="Enter the offerer name"
+          name="club"
+          defaultValue={player.club}
+          placeholder="Enter the club name"
           required
         />
       </label>
       <label>
-        Price
+        Offense
         <input
-          name="price"
-          type="number"
-          defaultValue={service.price}
-          placeholder="Enter the service price"
-          required
+          name="offense"
+          defaultValue={player.offense}
+          placeholder="Enter the offensive performance"
         />
       </label>
       <label>
         Image
         <input
           name="image"
-          defaultValue={service.image}
-          placeholder="Enter the service image"
-          required
+          defaultValue={player.image}
+          placeholder="Enter the player image"
         />
       </label>
       <label>
-        Description
-        <textarea
-          name="description"
-          type="price"
-          defaultValue={service.description}
-          placeholder="Enter the service description"
-          required
+        Defense
+        <input
+          name="defense"
+          defaultValue={player.defense}
+          placeholder="Enter the defensive performance"
         />
       </label>
-      <ActionButton>Save</ActionButton>
+      <label>
+        Technique
+        <input
+          name="technique"
+          defaultValue={player.technique}
+          placeholder="Enter the technical skills"
+        />
+      </label>
+      <button type="submit">Save</button>
     </Form>
   );
 }

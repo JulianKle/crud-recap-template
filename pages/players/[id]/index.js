@@ -7,9 +7,9 @@ import Column from "@/components/Layout/Column";
 import Cover from "@/components/Layout/Cover";
 import Avatar from "@/components/Layout/Avatar";
 import Card from "@/components/Layout/Card";
-import Loader from "@/components/Layout/Loader";
-import ActionButton from "@/components/Layout/ActionButton";
 import ReactMarkdown from "react-markdown";
+import ActionLink from "../../../components/Layout/ActionLink/index.js";
+import Link from "next/link.js";
 
 const StyledMarkdown = styled(ReactMarkdown)`
   display: flex;
@@ -32,7 +32,7 @@ export default function PlayerDetail() {
   const { id } = router.query;
   const { data: player, error } = useSWR(`/api/players/${id}`);
 
-  if (error) return <div>Error loading assessment</div>;
+  if (error) return <div>Error loading player</div>;
   if (!player) return <div>Loading...</div>;
 
   async function deletePlayer() {
@@ -73,6 +73,8 @@ export default function PlayerDetail() {
           <b>Technique:</b> {technique}
         </Flex>
       </Card>
+      <Link href={`/players/${id}/edit`}>Edit</Link>
+      <button onClick={deletePlayer}>delete</button>
     </Column>
   );
 }
