@@ -1,5 +1,6 @@
 import React from "react";
 import { useRouter } from "next/router";
+import { useState } from "react";
 import useSWR from "swr";
 import styled from "styled-components";
 import Flex from "@/components/Layout/Flex";
@@ -8,7 +9,8 @@ import Cover from "@/components/Layout/Cover";
 import Avatar from "@/components/Layout/Avatar";
 import Card from "@/components/Layout/Card";
 import ReactMarkdown from "react-markdown";
-import ActionLink from "../../../components/Layout/ActionLink/index.js";
+import FavoriteButton from "@/components/FavoriteButton/FavoriteButton";
+
 import Link from "next/link.js";
 
 const StyledMarkdown = styled(ReactMarkdown)`
@@ -30,10 +32,35 @@ const StyledMarkdown = styled(ReactMarkdown)`
 export default function PlayerDetail() {
   const router = useRouter();
   const { id } = router.query;
-  const { data: player, error } = useSWR(`/api/players/${id}`);
+  const {
+    data: player,
+    error,
+    mutate,
+  } = useSWR(id ? `/api/players/${id}` : null);
+  const [localFavorite, setLocalFavorite] = useState(player?.favorite || false);
 
   if (error) return <div>Error loading player</div>;
   if (!player) return <div>Loading...</div>;
+
+  async function handleFavoriteClick() {
+    console.log("Before update - localFavorite:", localFavorite);
+    console.log("Before update - player:", player);
+
+    const response = await fetch(`/api/players/${id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ favorite: !localFavorite, ...player }),
+    });
+
+    console.log("After update - localFavorite:", !localFavorite);
+    console.log("After update - player:", player);
+
+    if (response.ok) {
+      setLocalFavorite(!localFavorite);
+      mutate(`/api/players/${id}`);
+      console.log("toggled succesful");
+    }
+  }
 
   async function deletePlayer() {
     await fetch(`/api/players/${id}`, {
@@ -73,6 +100,10 @@ export default function PlayerDetail() {
           <b>Technique:</b> {technique}
         </Flex>
       </Card>
+      <FavoriteButton
+        isFavorite={player?.favorite}
+        onClick={handleFavoriteClick}
+      />
       <Link href={`/players/${id}/edit`}>Edit</Link>
       <button onClick={deletePlayer}>delete</button>
     </Column>

@@ -9,6 +9,7 @@ const playerSchema = new Schema({
   image: { type: String, required: false },
   defense: { type: String, required: false },
   technique: { type: String, required: false },
+  favorite: { type: Boolean, default: false, required: false },
 });
 
 const Player = mongoose.models.Player || mongoose.model("Player", playerSchema);
