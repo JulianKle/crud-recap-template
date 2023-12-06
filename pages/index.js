@@ -1,7 +1,9 @@
+import Players from "@/components/Players";
+
 export default function HomePage() {
   return (
     <div>
-      <h1>Hello Next!</h1>
+      <Players />
     </div>
   );
 }
